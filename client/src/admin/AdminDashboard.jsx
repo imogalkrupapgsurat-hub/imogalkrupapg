@@ -128,31 +128,31 @@ export default function AdminDashboard() {
     const stats = [
         {
             label: 'કુલ રૂમ',
-            value: rooms.length,
+            value: rooms?.length,
             icon: Home,
             color: 'bg-navy-900 text-white',
         },
         {
             label: 'ઉપલબ્ધ રૂમ',
-            value: rooms.filter((r) => r.status === 'Available').length,
+            value: rooms?.filter((r) => r.status === 'Available')?.length,
             icon: CheckCircle,
             color: 'bg-green-500 text-white',
         },
         {
             label: 'ભરાયેલા રૂમ',
-            value: rooms.filter((r) => r.status === 'Full').length,
+            value: rooms?.filter((r) => r.status === 'Full')?.length,
             icon: BedDouble,
             color: 'bg-red-500 text-white',
         },
         {
             label: 'કુલ બેડ',
-            value: rooms.reduce((s, r) => s + r.totalBeds, 0),
+            value: rooms?.reduce((s, r) => s + r.totalBeds, 0),
             icon: Users,
             color: 'bg-gold text-navy-900',
         },
         {
             label: 'ખાલી બેડ',
-            value: rooms.reduce((s, r) => s + r.availableBeds, 0),
+            value: rooms?.reduce((s, r) => s + r.availableBeds, 0),
             icon: BedDouble,
             color: 'bg-blue-500 text-white',
         },
@@ -381,7 +381,7 @@ export default function AdminDashboard() {
                                         />
                                         રૂમ લોડ થઈ રહ્યા છે...
                                     </div>
-                                ) : filtered.length === 0 ? (
+                                ) : filtered?.length === 0 ? (
                                     <div className="text-center py-20 text-gray-400">
                                         <BedDouble
                                             size={38}
@@ -476,7 +476,7 @@ export default function AdminDashboard() {
                                                             />
                                                         ))}
                                                     </div>
-                                                    {room.features.length >
+                                                    {room.features?.length >
                                                         0 && (
                                                         <div className="flex flex-wrap gap-1.5 mb-4">
                                                             {room.features
@@ -497,7 +497,7 @@ export default function AdminDashboard() {
                                                                     +
                                                                     {room
                                                                         .features
-                                                                        .length -
+                                                                        ?.length -
                                                                         4}{' '}
                                                                     વધુ
                                                                 </span>
