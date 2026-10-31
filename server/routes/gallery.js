@@ -1,11 +1,11 @@
 const express = require("express")
-const router  = express.Router()
-const multer  = require("multer")
-const path    = require("path")
-const fs      = require("fs")
-const { v4: uuidv4 } = require("uuid")
+const router = express.Router()
+const multer = require("multer")
+const path = require("path")
+const fs = require("fs")
+const { randomUUID } = require("crypto");
 const Gallery = require("../models/Gallery")
-const auth    = require("../middleware/auth")
+const auth = require("../middleware/auth")
 const {
   isCloudinaryConfigured,
   uploadStreamToCloudinary,
@@ -17,7 +17,7 @@ const memoryStorage = multer.memoryStorage()
 const fileFilter = (req, file, cb) => {
   const allowed = /jpeg|jpg|png|webp|gif/
   const ok = allowed.test(path.extname(file.originalname).toLowerCase())
-            && allowed.test(file.mimetype)
+    && allowed.test(file.mimetype)
   ok ? cb(null, true) : cb(new Error("Only images allowed (jpg, png, webp, gif)"))
 }
 const upload = multer({ storage: memoryStorage, fileFilter, limits: { fileSize: 10 * 1024 * 1024 } })
@@ -66,18 +66,18 @@ router.post("/upload", auth, upload.single("image"), async (req, res) => {
       const dir = path.join(__dirname, "../uploads/gallery")
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
       const ext = path.extname(req.file.originalname).toLowerCase()
-      const filename = `${uuidv4()}${ext}`
+      const filename = `${randomUUID()}${ext}`
       fs.writeFileSync(path.join(dir, filename), req.file.buffer)
       imageUrl = `${BASE_URL}/uploads/gallery/${filename}`
     }
 
     const gallery = new Gallery({
-      title:     title || req.file.originalname,
-      category:  category || "Other",
-      filename:  req.file.originalname,
-      url:       imageUrl,
+      title: title || req.file.originalname,
+      category: category || "Other",
+      filename: req.file.originalname,
+      url: imageUrl,
       public_id: publicId,
-      size:      req.file.size,
+      size: req.file.size,
     })
     await gallery.save()
 
@@ -116,18 +116,18 @@ router.post("/upload-many", auth, upload.array("images", 20), async (req, res) =
         const dir = path.join(__dirname, "../uploads/gallery")
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
         const ext = path.extname(file.originalname).toLowerCase()
-        const filename = `${uuidv4()}${ext}`
+        const filename = `${randomUUID()}${ext}`
         fs.writeFileSync(path.join(dir, filename), file.buffer)
         imageUrl = `${BASE_URL}/uploads/gallery/${filename}`
       }
 
       docs.push({
-        title:     file.originalname.replace(/\.[^.]+$/, ""),
-        category:  category || "Other",
-        filename:  file.originalname,
-        url:       imageUrl,
+        title: file.originalname.replace(/\.[^.]+$/, ""),
+        category: category || "Other",
+        filename: file.originalname,
+        url: imageUrl,
         public_id: publicId,
-        size:      file.size,
+        size: file.size,
       })
     }
 

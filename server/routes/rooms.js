@@ -1,11 +1,11 @@
 const express = require("express")
-const router  = express.Router()
-const multer  = require("multer")
-const path    = require("path")
-const fs      = require("fs")
-const { v4: uuidv4 } = require("uuid")
-const Room    = require("../models/Room")
-const auth    = require("../middleware/auth")
+const router = express.Router()
+const multer = require("multer")
+const path = require("path")
+const fs = require("fs")
+const { randomUUID } = require("crypto");
+const Room = require("../models/Room")
+const auth = require("../middleware/auth")
 const {
   isCloudinaryConfigured,
   uploadStreamToCloudinary,
@@ -35,7 +35,7 @@ router.post("/upload", auth, upload.single("image"), async (req, res) => {
       const dir = path.join(__dirname, "../uploads/rooms")
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true })
       const ext = path.extname(req.file.originalname).toLowerCase()
-      const filename = `room-${uuidv4()}${ext}`
+      const filename = `room-${randomUUID()}${ext}`
       fs.writeFileSync(path.join(dir, filename), req.file.buffer)
       imageUrl = `/uploads/rooms/${filename}`
     }
@@ -55,9 +55,9 @@ router.post("/upload", auth, upload.single("image"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const filter = {}
-    if (req.query.type)   filter.type   = req.query.type
+    if (req.query.type) filter.type = req.query.type
     if (req.query.status) filter.status = req.query.status
-    if (req.query.floor)  filter.floor  = req.query.floor
+    if (req.query.floor) filter.floor = req.query.floor
     const rooms = await Room.find(filter).sort({ floor: 1, roomNumber: 1 })
     res.json({ success: true, data: rooms })
   } catch (err) {
