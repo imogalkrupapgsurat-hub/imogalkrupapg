@@ -89,7 +89,7 @@ function PlanFormModal({ plan, onClose, onSave }) {
     const removeItem = (i) =>
         set(
             'items',
-            form.items.filter((_, idx) => idx !== i),
+            form.items?.filter((_, idx) => idx !== i),
         );
 
     // ── timings ──
@@ -104,7 +104,7 @@ function PlanFormModal({ plan, onClose, onSave }) {
     const removeTiming = (i) =>
         set(
             'timings',
-            form.timings.filter((_, idx) => idx !== i),
+            form.timings?.filter((_, idx) => idx !== i),
         );
 
     const submit = async (e) => {
@@ -624,8 +624,9 @@ export default function MealPlanManager({ showToast }) {
                         મીલ પ્લાન્સ (Meal Plans)
                     </h3>
                     <p className="text-gray-400 text-xs mt-0.5">
-                        કુલ {plans.length} પ્લાન્સ ·{' '}
-                        {plans.filter((p) => p.isActive).length} વેબસાઇટ પર લાઈવ
+                        કુલ {plans?.length} પ્લાન્સ ·{' '}
+                        {plans?.filter((p) => p.isActive).length} વેબસાઇટ પર
+                        લાઈવ
                     </p>
                 </div>
                 <div className="flex gap-2">
