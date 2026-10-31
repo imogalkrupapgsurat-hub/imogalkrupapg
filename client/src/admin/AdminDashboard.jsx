@@ -89,7 +89,9 @@ export default function AdminDashboard() {
         setLoading(true);
         try {
             const r = await axios.get('/api/rooms');
-            setRooms(r.data.data);
+            setRooms(Array.isArray(r.data?.data) ? r.data.data : []);
+        } catch {
+            setRooms([]);
         } finally {
             setLoading(false);
         }

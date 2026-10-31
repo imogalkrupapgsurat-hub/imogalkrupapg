@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import {
@@ -580,7 +580,9 @@ export default function MealPlanManager({ showToast }) {
         setLoading(true);
         try {
             const r = await axios.get('/api/mealplans?all=true');
-            setPlans(r.data.data);
+            setPlans(Array.isArray(r.data?.data) ? r.data.data : []);
+        } catch {
+            setPlans([]);
         } finally {
             setLoading(false);
         }

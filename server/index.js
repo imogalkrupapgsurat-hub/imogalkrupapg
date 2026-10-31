@@ -1,4 +1,4 @@
-﻿const express = require("express")
+const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const path = require("path")
@@ -14,9 +14,7 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
-app.use("/", (req, res) => {
-  res.json({ message: "Mogal Krupa PG API running" })
-})
+
 app.use("/api/rooms", require("./routes/rooms"))
 app.use("/api/contact", require("./routes/contact"))
 app.use("/api/booking", require("./routes/booking"))

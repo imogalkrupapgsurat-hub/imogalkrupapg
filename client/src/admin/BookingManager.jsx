@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
 import {
@@ -29,7 +29,7 @@ export default function BookingManager({ showToast }) {
     setLoading(true)
     try {
       const r = await axios.get("/api/booking")
-      setBookings(r.data.data)
+      setBookings(Array.isArray(r.data?.data) ? r.data.data : [])
     } catch (err) {
       showToast(err.response?.data?.message || "બુકિંગ મેળવવામાં ભૂલ થઈ", "error")
     } finally {

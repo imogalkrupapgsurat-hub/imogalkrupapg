@@ -183,7 +183,7 @@ export default function RoomsPage() {
     useEffect(() => {
         axios
             .get('/api/rooms')
-            .then((r) => setRooms(r.data.data))
+            .then((r) => setRooms(Array.isArray(r.data?.data) ? r.data.data : []))
             .catch(() =>
                 setError(
                     'રૂમ લોડ કરવામાં અગવડ થઈ છે. કૃપા કરીને ફરી પ્રયાસ કરો.',
@@ -193,7 +193,7 @@ export default function RoomsPage() {
     }, []);
 
     const filtered =
-        filter === 'All' ? rooms : rooms.filter((r) => r.type === filter);
+        filter === 'All' ? (rooms || []) : (rooms || []).filter((r) => r.type === filter);
     const toggleExpand = (id) =>
         setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
 
@@ -297,7 +297,7 @@ export default function RoomsPage() {
                         </div>
                     )}
 
-                    {!loading && !error && filtered.length === 0 && (
+                    {!loading && !error && (filtered?.length || 0) === 0 && (
                         <div className="flex flex-col items-center justify-center py-24 text-center">
                             <BedDouble
                                 size={42}
@@ -319,7 +319,7 @@ export default function RoomsPage() {
                         </div>
                     )}
 
-                    {!loading && !error && filtered.length > 0 && (
+                    {!loading && !error && (filtered?.length || 0) > 0 && (
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={filter}
@@ -334,8 +334,9 @@ export default function RoomsPage() {
                                         statusStyle.Available;
                                     const showAll = !!expanded[room._id];
                                     const PREVIEW = 6;
+                                    const featList = room.features || [];
                                     const hasMore =
-                                        room.features.length > PREVIEW;
+                                        featList.length > PREVIEW;
 
                                     return (
                                         <motion.div
@@ -479,8 +480,8 @@ export default function RoomsPage() {
                                                             </p>
                                                             <div className="grid grid-cols-2 gap-2">
                                                                 {(showAll
-                                                                    ? room.features
-                                                                    : room.features.slice(
+                                                                    ? (room.features || [])
+                                                                    : (room.features || []).slice(
                                                                           0,
                                                                           PREVIEW,
                                                                       )
@@ -535,7 +536,7 @@ export default function RoomsPage() {
                                                                 >
                                                                     {showAll
                                                                         ? 'ઓછું જુઓ ▲'
-                                                                        : `બધી ${room.features.length} સુવિધાઓ જુઓ ▼`}
+                                                                        : `બધી ${room.features?.length || 0} સુવિધાઓ જુઓ ▼`}
                                                                 </button>
                                                             )}
                                                         </div>

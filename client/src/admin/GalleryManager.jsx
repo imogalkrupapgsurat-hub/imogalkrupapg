@@ -53,9 +53,11 @@ export default function GalleryManager({ showToast }) {
         setLoading(true);
         try {
             const r = await axios.get('/api/gallery');
-            setImages(r.data.data);
+            setImages(Array.isArray(r.data?.data) ? r.data.data : []);
             const cld = await axios.get('/api/gallery/cloudinary-status');
             if (cld.data?.success) setCldInfo(cld.data);
+        } catch {
+            setImages([]);
         } finally {
             setLoading(false);
         }

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -48,12 +48,12 @@ export default function FoodCourtPage() {
     useEffect(() => {
         axios
             .get('/api/mealplans')
-            .then((r) => setPlans(r.data.data))
-            .catch(() => {})
+            .then((r) => setPlans(Array.isArray(r.data?.data) ? r.data.data : []))
+            .catch(() => setPlans([]))
             .finally(() => setLoading(false));
     }, []);
 
-    const allTimings = plans
+    const allTimings = (plans || [])
         .flatMap((p) => p.timings || [])
         .reduce((acc, t) => {
             if (!acc.find((x) => x.meal === t.meal)) acc.push(t);
@@ -212,7 +212,7 @@ export default function FoodCourtPage() {
                         </div>
                     )}
 
-                    {!loading && plans.length === 0 && (
+                    {!loading && (plans?.length || 0) === 0 && (
                         <div className="text-center py-16 text-gray-400">
                             <p className="font-semibold">
                                 હાલમાં કોઈ પ્લાન લિસ્ટેડ નથી.
@@ -229,12 +229,12 @@ export default function FoodCourtPage() {
                         </div>
                     )}
 
-                    {!loading && plans.length > 0 && (
+                    {!loading && (plans?.length || 0) > 0 && (
                         <div
                             className={`grid gap-8 max-w-5xl mx-auto ${
-                                plans.length === 1
+                                (plans?.length || 0) === 1
                                     ? 'grid-cols-1 max-w-sm'
-                                    : plans.length === 2
+                                    : (plans?.length || 0) === 2
                                       ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl'
                                       : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
                             }`}
@@ -296,9 +296,9 @@ export default function FoodCourtPage() {
                                             </p>
                                         )}
 
-                                        {plan.items.length > 0 && (
+                                        {(plan.items?.length || 0) > 0 && (
                                             <ul className="space-y-2 mb-5">
-                                                {plan.items.map((item, j) => (
+                                                {(plan.items || []).map((item, j) => (
                                                     <li
                                                         key={j}
                                                         className="flex items-start gap-2 text-sm text-gray-600"
@@ -313,9 +313,9 @@ export default function FoodCourtPage() {
                                             </ul>
                                         )}
 
-                                        {plan.timings.length > 0 && (
+                                        {(plan.timings?.length || 0) > 0 && (
                                             <div className="flex flex-wrap gap-1.5 mb-5">
-                                                {plan.timings.map((t, j) => (
+                                                {(plan.timings || []).map((t, j) => (
                                                     <span
                                                         key={j}
                                                         className="flex items-center gap-1 text-[10px] bg-amber-50 border border-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold"
@@ -355,7 +355,7 @@ export default function FoodCourtPage() {
             </section>
 
             {/* MEAL TIMINGS SCHEDULE */}
-            {!loading && allTimings.length > 0 && (
+            {!loading && (allTimings?.length || 0) > 0 && (
                 <section className="bg-cream py-20 px-6">
                     <div className="max-w-5xl mx-auto">
                         <motion.div

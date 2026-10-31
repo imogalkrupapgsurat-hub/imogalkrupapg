@@ -46,14 +46,14 @@ export default function GalleryPage() {
 
   useEffect(() => {
     axios.get("/api/gallery")
-      .then(r => setImages(r.data.data || []))
+      .then(r => setImages(Array.isArray(r.data?.data) ? r.data.data : []))
       .catch(() => setError("ફોટો લોડ કરવામાં અગવડ થઈ છે."))
       .finally(() => setLoading(false))
   }, [])
 
   const filtered = active === "All"
-    ? images
-    : images.filter(i => i.category === active)
+    ? (images || [])
+    : (images || []).filter(i => i.category === active)
 
   const go = dir => {
     const idx = filtered.findIndex(i => i._id === lightbox._id)
